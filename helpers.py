@@ -89,13 +89,13 @@ def scrape_reddit():
     sid_obj = SentimentIntensityAnalyzer()
     sent_keys = ["Negative", "Neutral", "Positive"]
     sentiment_dict = sid_obj.polarity_scores(working_df['post'])
-        score = sentiment_dict['compound']
-        if score >= 0.05 :
-            final=f"Positive: {round(score,2)}"
-        elif score <= - 0.05 :
-            final=f"Negative: {round(score,2)}"
-        else :
-            final=f"Neutral: {round(score,2)}"
+    score = sentiment_dict['compound']
+    if score >= 0.05 :
+        final=f"Positive: {round(score,2)}  <img src='smiley.png' width='50' height='50'>"
+    elif score <= - 0.05 :
+        final=f"Negative: {round(score,2)}  <img src='sad.png' width='50' height='50'>"
+    else :
+        final=f"Neutral: {round(score,2)}   <img src='meh.png' width='50' height='50'>"
             
     working_df['sentiment'] = final
     
