@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import datetime
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
+import numpy as np
 
 ########### Set up the default figures ######
 
