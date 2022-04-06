@@ -6,11 +6,12 @@ import plotly.graph_objs as go
 from helpers import *
 
 
+
 ########### Define a few variables ######
 
 tabtitle = 'Reddit Webscraper'
 sourceurl = 'https://old.reddit.com/r/AskReddit/'
-githublink = 'https://github.com/austinlasseter/reddit-webscraper-plotly'
+githublink = 'https://github.com/sinusekhar/403-reddit-webscraper'
 
 ########### Initiate the app
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -18,6 +19,7 @@ external_stylesheets = ['https://github.com/plotly/dash-app-stylesheets/blob/mas
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title=tabtitle
+
 
 ########### Layout ###########
 

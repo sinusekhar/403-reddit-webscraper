@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import datetime
-
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 ########### Set up the default figures ######
@@ -85,7 +85,21 @@ def scrape_reddit():
     # split into 2 date/time variables
     working_df['date']=working_df['UTC_date'].dt.date
     working_df['time']=working_df['UTC_date'].dt.time
-    final_df = working_df[['date', 'time', 'post']].copy()
+    
+    sid_obj = SentimentIntensityAnalyzer()
+    sent_keys = ["Negative", "Neutral", "Positive"]
+    sentiment_dict = sid_obj.polarity_scores(working_df['post'])
+    sent_values = [x for x in sentiment_dict.values()]
+    sent_values=sent_values[:3]
+    # find the index of the max value
+
+    index_max = np.argmax(sent_values)
+    
+    # decide sentiment as positive, negative and neutral
+    sntmnt = sent_keys[index_max]
+    working_df['sentiment'] = sntmnt
+    
+    final_df = working_df[['date', 'time', 'post','sentiment']].copy()
 
 
 
@@ -96,7 +110,8 @@ def scrape_reddit():
                     cells=dict(align=['left'],
                                values=[final_df['date'],
                                        final_df['time'],
-                                       final_df['post'].values])
+                                       final_df['post'],
+                                       final_df['sentiment'].values])
                  )
     fig = go.Figure([data])
     return fig
