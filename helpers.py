@@ -58,7 +58,7 @@ def sentiment_scores(sentence):
         sentiment_dict = sid_obj.polarity_scores(sentence)
         score = sentiment_dict['compound']
         if score >= 0.05 :
-            final=f"Positive: {round(score,2)}   <img src='smiley.png' width='50' height='50'>"
+            final=f"Positive: {round(score,2)}   <img src='smiley.png' width='50' height='50'> \u1f600"
         elif score <= - 0.05 :
             final=f"Negative: {round(score,2)}   <img src='sad.png' width='50' height='50'>"
         else :
