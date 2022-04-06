@@ -89,15 +89,15 @@ def scrape_reddit():
     sid_obj = SentimentIntensityAnalyzer()
     sent_keys = ["Negative", "Neutral", "Positive"]
     sentiment_dict = sid_obj.polarity_scores(working_df['post'])
-    sent_values = [x for x in sentiment_dict.values()]
-    sent_values=sent_values[:3]
-    # find the index of the max value
-
-    index_max = np.argmax(sent_values)
-    
-    # decide sentiment as positive, negative and neutral
-    sntmnt = sent_keys[index_max]
-    working_df['sentiment'] = sntmnt
+        score = sentiment_dict['compound']
+        if score >= 0.05 :
+            final=f"Positive: {round(score,2)}"
+        elif score <= - 0.05 :
+            final=f"Negative: {round(score,2)}"
+        else :
+            final=f"Neutral: {round(score,2)}"
+            
+    working_df['sentiment'] = final
     
     final_df = working_df[['date', 'time', 'post','sentiment']].copy()
 
