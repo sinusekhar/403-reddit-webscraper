@@ -50,6 +50,23 @@ def parse_that_date(row):
     z = '2020 '+ y
     return z[:20]
 
+
+def sentiment_scores(sentence):
+    try:
+    # Create a SentimentIntensityAnalyzer object.
+        sid_obj = SentimentIntensityAnalyzer()
+        sentiment_dict = sid_obj.polarity_scores(sentence)
+        score = sentiment_dict['compound']
+        if score >= 0.05 :
+            final=f"Positive: {round(score,2)}"
+        elif score <= - 0.05 :
+            final=f"Negative: {round(score,2)}"
+        else :
+            final=f"Neutral: {round(score,2)}"
+        return final
+    except:
+        return "Error"
+
 ########### Scraping ######
 
 def scrape_reddit():
@@ -85,19 +102,8 @@ def scrape_reddit():
     # split into 2 date/time variables
     working_df['date']=working_df['UTC_date'].dt.date
     working_df['time']=working_df['UTC_date'].dt.time
-    
-    sid_obj = SentimentIntensityAnalyzer()
-    sent_keys = ["Negative", "Neutral", "Positive"]
-    sentiment_dict = sid_obj.polarity_scores(working_df['post'])
-    score = sentiment_dict['compound']
-    if score >= 0.05 :
-        final=f"Positive: {round(score,2)}  <img src='smiley.png' width='50' height='50'>"
-    elif score <= - 0.05 :
-        final=f"Negative: {round(score,2)}  <img src='sad.png' width='50' height='50'>"
-    else :
-        final=f"Neutral: {round(score,2)}   <img src='meh.png' width='50' height='50'>"
-            
-    working_df['sentiment'] = final
+    # add sentiment analysis
+    working_df['sentiment'] = working_df['post'].apply(sentiment_scores)
     
     final_df = working_df[['date', 'time', 'post','sentiment']].copy()
 
@@ -110,8 +116,9 @@ def scrape_reddit():
                     cells=dict(align=['left'],
                                values=[final_df['date'],
                                        final_df['time'],
-                                       final_df['post'],
-                                       final_df['sentiment'].values])
+                                       final_df['post'].values,
+                                       final_df['sentiment'].values
+                                       ])
                  )
     fig = go.Figure([data])
     return fig
